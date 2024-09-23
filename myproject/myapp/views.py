@@ -5,7 +5,7 @@ from .supabase_client import supabase
 def get_users(request):
     response = supabase.table('user_table').select('*').execute()
     users = response.data
-    return JsonResponse(users, safe=False)
+    return render(request, 'users.html', {'users': users})
 
 def create_user(request):
     if request.method == 'POST':
@@ -17,7 +17,7 @@ def create_user(request):
 def get_posts(request):
     response = supabase.table('post_table').select('*').execute()
     posts = response.data
-    return JsonResponse(posts, safe=False)
+    return render(request, 'posts.html', {'posts': posts})
 
 def create_post(request):
     if request.method == 'POST':
