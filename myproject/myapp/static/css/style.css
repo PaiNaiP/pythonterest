@@ -52,13 +52,27 @@ h2 {
     width: 90%;
 }
 
-header{
+header {
     margin: 0 auto;
     display: flex;
     justify-content: center;
     padding: 5px;
 }
 
-.post_img{
+/* .post_blok {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    grid-template-rows: repeat(auto-fill, 100px);
+} */
+
+.post_blok {
+    display: inline-block;
+   
+}
+
+.post_img {
     width: 20%;
+   
 }
