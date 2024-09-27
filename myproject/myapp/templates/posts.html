@@ -16,11 +16,17 @@
 <body>
     <header>
         <h3>LOGO</h3>
-        
+
     </header>
 
-    <article>
-        <img src="" alt="">
+    <article class="article">
+        <div class="post_blok">
+            {% for post in posts %}
+            <a>{{ post.text }} </a>
+            <img class="post_img" src="{{ post.image }}" alt="">
+            {% endfor %}
+        </div>
+
     </article>
 
 </body>
