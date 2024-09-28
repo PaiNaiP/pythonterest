@@ -1,63 +1,78 @@
-:root {
-    --text-color: #000000;
-    --accent-color: #AFFC41;
-    --fon-color: #0C0809;
-    --color-accent-gradient: linear-gradient(180deg, #E7FDC8 0%, #AFFC41 100%);
-    --color-white: #fff;
-    --fon-gradient: linear-gradient(180deg, #363435 0%, #0C0809 100%);
-    --color-circuit: rgba(203, 210, 198, 0.00);
-    --color-blur: rgba(45, 38, 38, 0.25);
-    --blur: blur(10px);
-}
-
-* {
+body {
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
-    border: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
-    list-style: none;
-}
-
-body {
-    background: var(--color-white);
-    color: var(--text-color);
-    font-size: 24px;
-}
-
-a {
-    text-decoration: none;
-    color: #000000;
-}
-
-h1 {
-    display: flex;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 36px;
-    padding-top: 100px;
-}
-
-h2 {
-    display: flex;
-    justify-content: center;
-    font-weight: 400;
-    font-size: 20px;
-    padding-top: 10px;
-}
-
-.article {
-    margin: 0 auto;
-    width: 90%;
+    background-color: #f4f4f4;
 }
 
 header {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.article {
+    padding: 20px;
+}
+
+.post_blok {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.col {
+    height: auto;
+    width: calc(100% / 5);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+}
+
+.card {
+    margin: 0;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 10px;
+    display: block;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+header{
     margin: 0 auto;
     display: flex;
     justify-content: center;
     padding: 5px;
 }
+
 
 .post_blok {
     column-count: 4;
@@ -73,3 +88,4 @@ header {
     width: 100%;
     height: auto;
 }
+
