@@ -59,20 +59,17 @@ header {
     padding: 5px;
 }
 
-/* .post_blok {
-    display: grid;
-    justify-content: center;
-    justify-items: center;
-    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
-    grid-template-rows: repeat(auto-fill, 100px);
-} */
-
 .post_blok {
-    display: inline-block;
-   
+    column-count: 4;
+    column-gap: 20px;
 }
 
 .post_img {
-    width: 20%;
-   
+    break-inside: avoid;
+    margin-bottom: 20px;
+}
+
+.post_img img {
+    width: 100%;
+    height: auto;
 }

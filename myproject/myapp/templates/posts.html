@@ -23,7 +23,9 @@
         <div class="post_blok">
             {% for post in posts %}
             <!-- <a>{{ post.text }}</a> -->
-            <img class="post_img" src="{{ post.image }}" alt="">
+            <div class="post_img">
+                <img src="{{ post.image }}" alt="">
+            </div>
             {% endfor %}
         </div>
 
