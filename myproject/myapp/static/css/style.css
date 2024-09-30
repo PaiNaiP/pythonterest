@@ -1,78 +1,52 @@
-body {
-    font-family: 'Montserrat', sans-serif;
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    border: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    list-style: none;
 }
 
-header {
-    background-color: #fff;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-header h3 {
-    margin: 0;
+body {
+    background: var(--color-white);
+    color: var(--text-color);
     font-size: 24px;
-    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-white);
 }
 
 .article {
-    padding: 20px;
+    margin: 0 auto;
+    width: 90%;
 }
 
-.post_blok {
+header {
+    margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.col {
-    height: auto;
-    width: calc(100% / 5);
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    width: 90%;
     padding: 10px;
-    gap: 10px;
 }
 
-.card {
-    margin: 0;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s;
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-
-.card a {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    padding: 10px;
+h3 {
     display: block;
 }
 
-.card img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 20px;
+.login a:not(:last-child) {
+    margin-right: 20px;
+
 }
 
-header{
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    padding: 5px;
+.login1{
+    font-weight: bold;
+    border: 2px solid #000;
+    padding: 5px 10px;
+    border-radius: 10px;
 }
-
 
 .post_blok {
     column-count: 4;
@@ -82,10 +56,11 @@ header{
 .post_img {
     break-inside: avoid;
     margin-bottom: 20px;
+    
 }
 
 .post_img img {
     width: 100%;
     height: auto;
+    border-radius: 10px;
 }
-
