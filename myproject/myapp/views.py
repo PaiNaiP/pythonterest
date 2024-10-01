@@ -11,6 +11,7 @@ from django.core.files.base import ContentFile
 from .forms import RegistrationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from .forms import CustomLoginForm
 import os
 
 @login_required
@@ -33,9 +34,7 @@ def create_post(request):
                 'user_id': user_id,
             }
             response = supabase.table('post_table').insert(post_data).execute()
-            # if response.status_code != 201:
-            #     messages.error(request, f"Error creating post in Supabase: {response.text}")
-            #     return redirect('create_post')
+            
 
             return redirect('post_list')
     else:
@@ -95,7 +94,7 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomLoginForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -115,8 +114,9 @@ def user_login(request):
                 messages.error(request, 'Invalid login credentials.')
                 return redirect('login')
     else:
-        form = AuthenticationForm()
+        form = CustomLoginForm()
     return render(request, 'login.html', {'form': form})
+
 
 def user_logout(request):
     logout(request)
