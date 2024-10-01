@@ -4,6 +4,34 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .supabase_client import supabase
 from django.contrib import messages
+from django.contrib.auth.models import User
+from .forms import PostForm
+from uuid import uuid4
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            image = form.cleaned_data['image']
+            text = form.cleaned_data['text']
+            user_id = str(request.user)
+
+            # Создание нового поста в Supabase
+            post_data = {
+                'image': image,
+                'text': text,
+                'user_id': user_id,
+            }
+            response = supabase.table('post_table').insert(post_data).execute()
+            # if response.status_code != 201:
+            #     messages.error(request, f"Error creating post in Supabase: {response.text}")
+            #     return redirect('create_post')
+
+            return redirect('post_list')
+    else:
+        form = PostForm()
+    return render(request, 'create_post.html', {'form': form})
 
 def post_list(request):
     # Получите все посты из Supabase
@@ -50,9 +78,23 @@ def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('post_list')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+
+            # Проверка данных пользователя в Supabase
+            response = supabase.table('user_table').select('*').eq('login', username).eq('password', password).execute()
+            if response.data:
+                # Если данные правильные, найдите или создайте пользователя в Django
+                user, created = User.objects.get_or_create(username=response.data[0]['id'])
+                
+                if created:
+                    user.set_password(password)
+                    user.save()
+                login(request, user)
+                return redirect('post_list')
+            else:
+                messages.error(request, 'Invalid login credentials.')
+                return redirect('login')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -63,4 +105,5 @@ def user_logout(request):
 
 @login_required
 def account(request):
+    print(request.user)
     return render(request, 'account.html')
