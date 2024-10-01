@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from .forms import PostForm
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from .forms import RegistrationForm
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
 import os
 
 @login_required
@@ -62,7 +65,7 @@ def post_detail(request, pk):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
 
@@ -86,8 +89,9 @@ def register(request):
             login(request, user)
             return redirect('post_list')
     else:
-        form = UserCreationForm()
+        form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
+
 
 def user_login(request):
     if request.method == 'POST':

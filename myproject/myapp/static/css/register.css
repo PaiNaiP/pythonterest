@@ -1,0 +1,54 @@
+h1 {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+p {
+    font-size: 20px;
+}
+
+ul {
+    color: red;
+    padding: 0;
+    font-size: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input{
+    border: #000 solid 1px;
+    border-radius: 10px;
+    padding: 10px 20px;
+    width: 100%;
+}
+
+input:not(:last-child){
+    margin-bottom: 15px;
+}
+
+button {
+    background-color: #415a77;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #0d1b2a;
+}
+
+.login {
+    color: #000;
+    text-decoration: none;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
