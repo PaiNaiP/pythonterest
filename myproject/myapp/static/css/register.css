@@ -1,0 +1,60 @@
+h1 {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+p {
+    font-size: 20px;
+}
+
+ul {
+    color: red;
+    padding: 0;
+    font-size: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input{
+    border: #000 solid 1px;
+    border-radius: 10px;
+}
+
+input[name="csrfmiddlewaretoken"]::placeholder {
+    color: #000;
+    font-style: italic;
+}
+
+input[name="username"]::placeholder {
+    color: #000;
+    font-style: italic;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+a {
+    color: #008CBA;
+    text-decoration: none;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
