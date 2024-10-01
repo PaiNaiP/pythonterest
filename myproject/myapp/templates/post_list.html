@@ -17,27 +17,25 @@
     <header>
         <a href="{% url 'post_list' %}"><h3>LOGO</h3></a>
         <div class="login">
-            <a href="{% url 'register' %}">Register</a> 
+            <a href="{% url 'register' %}">Register</a>
             <a class="login1" href="{% url 'login' %}">Login</a>
         </div>
-        
-
     </header>
 
     <article class="article">
         <div class="post_blok">
             {% for post in posts %}
             <div class="post_img">
-                <img  src="{{ post.image }}" alt="">
+                <a href="{% url 'post_detail' post.id %}">
+                    <img src="{{ post.image }}" alt="">
+                </a>
             </div>
             {% endfor %}
         </div>
-        
-        
+
         <a href="{% url 'logout' %}">Logout</a> |
         <a href="{% url 'account' %}">Account</a>
     </article>
-
 </body>
 
 </html>

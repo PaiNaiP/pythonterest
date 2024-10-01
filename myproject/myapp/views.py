@@ -6,7 +6,6 @@ from .supabase_client import supabase
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import PostForm
-from uuid import uuid4
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
@@ -50,7 +49,16 @@ def post_detail(request, pk):
     # Получите один пост из Supabase по его ID
     response = supabase.table('post_table').select('*').eq('id', pk).execute()
     post = response.data[0] if response.data else None
-    return render(request, 'post_detail.html', {'post': post})
+
+    # Получите информацию о пользователе, который загрузил пост
+    user_response = supabase.table('user_table').select('*').eq('id', post['user_id']).execute()
+    user = user_response.data[0] if user_response.data else None
+
+    context = {
+        'post': post,
+        'user': user,
+    }
+    return render(request, 'post_detail.html', context)
 
 def register(request):
     if request.method == 'POST':
