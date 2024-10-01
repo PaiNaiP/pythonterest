@@ -25,10 +25,12 @@
         {% endif %}
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.username }}
+            {{ form.password1 }}
+            {{ form.password2 }}
             <button type="submit">Register</button>
         </form>
-        <a href="{% url 'login' %}">Login</a>
+        <a class="login" href="{% url 'login' %}">Login</a>
     </article>
     
     
