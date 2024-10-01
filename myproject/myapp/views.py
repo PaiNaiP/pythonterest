@@ -81,10 +81,13 @@ def register(request):
                 'nickname': user.username,
             }
             response = supabase.table('user_table').insert(supabase_user_data).execute()
-            if response.status_code != 201:
-                messages.error(request, f"Error creating user in Supabase: {response.text}")
-                return redirect('register')
-
+            # if response.status_code != 201:
+            #     messages.error(request, f"Error creating user in Supabase: {response.text}")
+            #     return redirect('register')
+            response = supabase.table('user_table').select('*').eq('login', user.username).eq('password', form.cleaned_data['password1']).execute()
+            if response.data:
+                # Если данные правильные, найдите или создайте пользователя в Django
+                user, created = User.objects.get_or_create(username=response.data[0]['id'])
             login(request, user)
             return redirect('post_list')
     else:
@@ -124,5 +127,14 @@ def user_logout(request):
 
 @login_required
 def account(request):
-    print(request.user)
-    return render(request, 'account.html')
+    # Получите ID пользователя из request.user
+    user_id = request.user
+
+    # Получите данные пользователя из Supabase
+    response = supabase.table('user_table').select('*').eq('id', user_id).execute()
+    user_data = response.data[0] if response.data else None
+
+    context = {
+        'user_data': user_data,
+    }
+    return render(request, 'account.html', context)

@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
 </head>
 <body>
-    <h1>Account</h1>
-    <p>Welcome, {{ user.username }}</p>
-    <a href="{% url 'post_list' %}">Back to Posts</a>
+    <h1>Account Information</h1>
+    {% if user_data %}
+        <p>Nickname: {{ user_data.nickname }}</p>
+        <!-- Добавьте другие поля, если необходимо -->
+    {% else %}
+        <p>User data not found.</p>
+    {% endif %}
 </body>
 </html>
