@@ -18,8 +18,8 @@
     <header>
         <a href="{% url 'post_list' %}"><h3>LOGO</h3></a>
         <div class="login">
-            <a href="{% url 'register' %}">Register</a>
-            <a class="login1" href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+            <a class="login1" href="{% url 'login' %}">Вход</a>
         </div>
     </header>
 
@@ -34,8 +34,7 @@
             {% endfor %}
         </div>
 
-        <a href="{% url 'logout' %}">Logout</a> |
-        <a href="{% url 'account' %}">Account</a> 
+        <a href="{% url 'account' %}">Account</a> /
         <a href="{% url 'create_post' %}">create_post</a> 
     </article>
 </body>

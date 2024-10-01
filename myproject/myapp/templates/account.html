@@ -1,17 +1,47 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
+    <link rel="stylesheet" href="{% static 'css/account.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normolize.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
-    <h1>Account Information</h1>
-    {% if user_data %}
-        <p>Nickname: {{ user_data.nickname }}</p>
-        <!-- Добавьте другие поля, если необходимо -->
-    {% else %}
-        <p>User data not found.</p>
-    {% endif %}
+    <header>
+        <a href="{% url 'post_list' %}"><h3>LOGO</h3></a>
+        <div class="login">
+            <a class="login1" href="{% url 'logout' %}">Выйти</a>
+        </div>
+    </header>
+    <article class="article">
+        <!-- <h1>Информация об аккаунте</h1> -->
+        {% if user_data %}
+        <div class="avatar">
+            <p>{{ user_data.nickname|first }}</p>
+        </div>
+        <p class="nickname">{{ user_data.nickname }}</p>
+        {% else %}
+        <p>Данные пользователя не найдены.</p>
+        {% endif %}
+
+        <script>
+            window.onload = function() {
+                var avatar = document.querySelector('.avatar');
+                var randomColor = '#' + Math.floor(Math.random()*8388607).toString(16);
+                avatar.style.backgroundColor = randomColor;
+            }
+        </script>        
+
+    </article>
+
 </body>
+
 </html>
