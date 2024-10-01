@@ -7,19 +7,26 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import PostForm
 from uuid import uuid4
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
             text = form.cleaned_data['text']
             user_id = str(request.user)
 
+            # Сохранение файла в локальную папку
+            file_path = default_storage.save(f'media/posts/{image.name}', ContentFile(image.read()))
+            image_url = request.build_absolute_uri(default_storage.url(file_path))
+
             # Создание нового поста в Supabase
             post_data = {
-                'image': image,
+                'image': image_url,
                 'text': text,
                 'user_id': user_id,
             }
@@ -86,7 +93,7 @@ def user_login(request):
             if response.data:
                 # Если данные правильные, найдите или создайте пользователя в Django
                 user, created = User.objects.get_or_create(username=response.data[0]['id'])
-                
+
                 if created:
                     user.set_password(password)
                     user.save()
