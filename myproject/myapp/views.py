@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import CustomLoginForm
 import os
+from django.http import JsonResponse
 
 @login_required
 def create_post(request):
@@ -49,18 +50,30 @@ def post_list(request):
 
 def post_detail(request, pk):
     # Получите один пост из Supabase по его ID
-    response = supabase.table('post_table').select('*').eq('id', pk).execute()
+    response = supabase.table('post_table').select('*').eq('id', str(pk)).execute()
     post = response.data[0] if response.data else None
 
     # Получите информацию о пользователе, который загрузил пост
     user_response = supabase.table('user_table').select('*').eq('id', post['user_id']).execute()
     user = user_response.data[0] if user_response.data else None
 
+    # Получите количество лайков для поста
+    like_response = supabase.table('like_table').select('*').eq('post_id', pk).execute()
+    like_count = len(like_response.data)
+
+    # Получите состояние лайка для текущего пользователя
+    user_id = str(request.user)
+    user_like_response = supabase.table('like_table').select('*').eq('user_id', user_id).eq('post_id', pk).execute()
+    user_liked = bool(user_like_response.data)
+
     context = {
         'post': post,
         'user': user,
+        'like_count': like_count,
+        'user_liked': user_liked,
     }
     return render(request, 'post_detail.html', context)
+
 
 def register(request):
     if request.method == 'POST':
@@ -138,3 +151,30 @@ def account(request):
         'user_data': user_data,
     }
     return render(request, 'account.html', context)
+
+@login_required
+def toggle_like(request, pk):
+    if request.method == 'POST':
+        user_id = str(request.user)
+        post_id = str(pk)
+        # Проверка, существует ли лайк
+        response = supabase.table('like_table').select('*').eq('user_id', user_id).eq('post_id', post_id).execute()
+        if response.data:
+            # Если лайк существует, удалите его
+            supabase.table('like_table').delete().eq('user_id', user_id).eq('post_id', post_id).execute()
+            liked = False
+        else:
+            # Если лайка нет, добавьте его
+            like_data = {
+                'user_id': user_id,
+                'post_id': post_id,
+            }
+            supabase.table('like_table').insert(like_data).execute()
+            liked = True
+
+        # Получите обновленное количество лайков
+        like_response = supabase.table('like_table').select('*').eq('post_id', post_id).execute()
+        like_count = len(like_response.data)
+
+        return JsonResponse({'liked': liked, 'like_count': like_count})
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

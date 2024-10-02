@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Detail</title>
-    <link rel="stylesheet" href="{% static '/css/style.css'%}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
@@ -33,11 +33,39 @@
             <div class="post_user">
                 <p>Uploaded by: {{ user.nickname }}</p>
             </div>
+            <div class="post_likes">
+                <button id="like-button" data-post-id="{{ post.id }}">
+                    {% if user_liked %}Unlike{% else %}Like{% endif %}
+                </button>
+                <span id="like-count">{{ like_count }}</span>
+            </div>
         </div>
 
         <a href="{% url 'logout' %}">Logout</a> |
         <a href="{% url 'account' %}">Account</a>
     </article>
+
+    <script>
+        document.getElementById('like-button').addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            fetch(`/post/${postId}/toggle_like/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    this.textContent = 'Unlike';
+                } else {
+                    this.textContent = 'Like';
+                }
+                document.getElementById('like-count').textContent = data.like_count;
+            });
+        });
+    </script>
 </body>
 
 </html>
