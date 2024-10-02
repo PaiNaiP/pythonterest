@@ -41,6 +41,22 @@
             </div>
         </div>
 
+        <div class="comments">
+            <h3>Comments</h3>
+            <ul id="comments-list">
+                {% for comment in comments %}
+                    <li>
+                        <strong>{{ comment.user.nickname }}:</strong> {{ comment.text }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <form id="comment-form">
+                {% csrf_token %}
+                <textarea id="comment-text" name="text" placeholder="Add a comment..." required></textarea>
+                <button type="submit">Add Comment</button>
+            </form>
+        </div>
+
         <a href="{% url 'logout' %}">Logout</a> |
         <a href="{% url 'account' %}">Account</a>
     </article>
@@ -63,6 +79,33 @@
                     this.textContent = 'Like';
                 }
                 document.getElementById('like-count').textContent = data.like_count;
+            });
+        });
+
+        document.getElementById('comment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const postId = '{{ post.id }}';
+            const text = document.getElementById('comment-text').value;
+            fetch(`/post/${postId}/add_comment/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    text: text
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const commentsList = document.getElementById('comments-list');
+                commentsList.innerHTML = '';
+                data.comments.forEach(comment => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${comment.user.nickname}:</strong> ${comment.text}`;
+                    commentsList.appendChild(li);
+                });
+                document.getElementById('comment-text').value = '';
             });
         });
     </script>

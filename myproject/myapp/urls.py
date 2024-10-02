@@ -10,4 +10,5 @@ urlpatterns = [
     path('account/', views.account, name='account'),
     path('create_post/', views.create_post, name='create_post'),
     path('post/<uuid:pk>/toggle_like/', views.toggle_like, name='toggle_like'),
+    path('post/<uuid:pk>/add_comment/', views.add_comment, name='add_comment'),
 ]

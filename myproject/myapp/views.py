@@ -50,7 +50,7 @@ def post_list(request):
 
 def post_detail(request, pk):
     # Получите один пост из Supabase по его ID
-    response = supabase.table('post_table').select('*').eq('id', str(pk)).execute()
+    response = supabase.table('post_table').select('*').eq('id', pk).execute()
     post = response.data[0] if response.data else None
 
     # Получите информацию о пользователе, который загрузил пост
@@ -66,14 +66,23 @@ def post_detail(request, pk):
     user_like_response = supabase.table('like_table').select('*').eq('user_id', user_id).eq('post_id', pk).execute()
     user_liked = bool(user_like_response.data)
 
+    # Получите комментарии для поста
+    comments_response = supabase.table('comment_table').select('*').eq('post_id', pk).execute()
+    comments = comments_response.data
+
+    # Получите информацию о пользователях, которые оставили комментарии
+    for comment in comments:
+        user_response = supabase.table('user_table').select('*').eq('id', comment['user_id']).execute()
+        comment['user'] = user_response.data[0] if user_response.data else None
+
     context = {
         'post': post,
         'user': user,
         'like_count': like_count,
         'user_liked': user_liked,
+        'comments': comments,
     }
     return render(request, 'post_detail.html', context)
-
 
 def register(request):
     if request.method == 'POST':
@@ -177,4 +186,31 @@ def toggle_like(request, pk):
         like_count = len(like_response.data)
 
         return JsonResponse({'liked': liked, 'like_count': like_count})
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@login_required
+def add_comment(request, pk):
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        user_id = str(request.user)
+        post_id = str(pk)
+
+        # Добавление нового комментария в Supabase
+        comment_data = {
+            'text': text,
+            'user_id': user_id,
+            'post_id': post_id,
+        }
+        supabase.table('comment_table').insert(comment_data).execute()
+
+        # Получение обновленного списка комментариев
+        comments_response = supabase.table('comment_table').select('*').eq('post_id', post_id).execute()
+        comments = comments_response.data
+
+        # Получение информации о пользователях, которые оставили комментарии
+        for comment in comments:
+            user_response = supabase.table('user_table').select('*').eq('id', comment['user_id']).execute()
+            comment['user'] = user_response.data[0] if user_response.data else None
+
+        return JsonResponse({'comments': comments})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
