@@ -1,10 +1,18 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
+import uuid
 
 class User(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     login = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=128)  # Увеличиваем длину для хранения хэшированного пароля
     nickname = models.CharField(max_length=50)
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
     def __str__(self):
         return self.nickname

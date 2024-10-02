@@ -18,9 +18,10 @@ class PostForm(forms.Form):
 
 class RegistrationForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Введите логин'}))
+    nickname = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Введите никнейм'}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Введите пароль'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Повторите пароль'}))
 
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'nickname', 'password1', 'password2']

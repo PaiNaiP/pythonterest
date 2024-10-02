@@ -26,15 +26,12 @@
         <form method="post">
             {% csrf_token %}
             {{ form.username }}
+            {{ form.nickname }}
             {{ form.password1 }}
             {{ form.password2 }}
             <button type="submit">Зарегистрироваться</button>
         </form>
         <a class="login" href="{% url 'login' %}">Авторизоваться</a>
     </article>
-    
-    
-    
-    
 </body>
 </html>
