@@ -14,6 +14,11 @@ from django.contrib.auth import login
 from .forms import CustomLoginForm
 import os
 from django.http import JsonResponse
+from .models import User  # Импортируем вашу модель User
+from django.contrib.auth.hashers import make_password
+from .models import User as CustomUser  # Импортируем вашу модель User
+from django.contrib.auth.models import User as DjangoUser
+
 
 @login_required
 def create_post(request):
@@ -88,13 +93,9 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-
-            # Проверка существования пользователя в Supabase
-            response = supabase.table('user_table').select('*').eq('login', user.username).execute()
-            if response.data:
-                messages.error(request, 'User with this username already exists in Supabase.')
-                return redirect('register')
+            # Хэширование пароля
+            raw_password = form.cleaned_data['password1']
+            hashed_password = make_password(raw_password)
 
             # Добавление нового пользователя в таблицу пользователей в Supabase
             supabase_user_data = {
@@ -103,10 +104,6 @@ def register(request):
                 'nickname': form.cleaned_data['nickname'],
             }
             response = supabase.table('user_table').insert(supabase_user_data).execute()
-            # if response.status_code != 201:
-            #     messages.error(request, f"Error creating user in Supabase: {response.text}")
-            #     return redirect('register')
-            response = supabase.table('user_table').select('*').eq('login', user.username).eq('password', form.cleaned_data['password1']).execute()
             if response.data:
                 # Если данные правильные, найдите или создайте пользователя в Django
                 user, created = User.objects.get_or_create(username=response.data[0]['id'])
@@ -117,7 +114,6 @@ def register(request):
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
 
-
 def user_login(request):
     if request.method == 'POST':
         form = CustomLoginForm(request, data=request.POST)
@@ -126,23 +122,29 @@ def user_login(request):
             password = form.cleaned_data.get('password')
 
             # Проверка данных пользователя в Supabase
-            response = supabase.table('user_table').select('*').eq('login', username).eq('password', password).execute()
+            response = supabase.table('user_table').select('*').eq('login', username).execute()
             if response.data:
-                # Если данные правильные, найдите или создайте пользователя в Django
-                user, created = User.objects.get_or_create(username=response.data[0]['id'])
+                user_data = response.data[0]
+                # Создаем экземпляр модели User для использования метода check_password
+                custom_user = CustomUser(login=user_data['login'], password=user_data['password'], nickname=user_data['nickname'])
+                if custom_user.check_password(password):
+                    # Если данные правильные, найдите или создайте пользователя в Django
+                    django_user, created = DjangoUser.objects.get_or_create(username=response.data[0]['id'])
 
-                if created:
-                    user.set_password(password)
-                    user.save()
-                login(request, user)
-                return redirect('post_list')
+                    if created:
+                        django_user.set_password(password)
+                        django_user.save()
+                    login(request, django_user)
+                    return redirect('post_list')
+                else:
+                    messages.error(request, 'Invalid login credentials.')
+                    return redirect('login')
             else:
                 messages.error(request, 'Invalid login credentials.')
                 return redirect('login')
     else:
         form = CustomLoginForm()
     return render(request, 'login.html', {'form': form})
-
 
 def user_logout(request):
     logout(request)
