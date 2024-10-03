@@ -8,15 +8,6 @@ class User(models.Model):
     password = models.CharField(max_length=128)  # Увеличиваем длину для хранения хэшированного пароля
     nickname = models.CharField(max_length=50)
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
-
-    def __str__(self):
-        return self.nickname
-
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, editable=False)
     image = models.TextField()

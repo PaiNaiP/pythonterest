@@ -93,9 +93,13 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            # Хэширование пароля
-            raw_password = form.cleaned_data['password1']
-            hashed_password = make_password(raw_password)
+            user = form.save()
+
+            # Проверка существования пользователя в Supabase
+            response = supabase.table('user_table').select('*').eq('login', user.username).execute()
+            if response.data:
+                messages.error(request, 'User with this username already exists in Supabase.')
+                return redirect('register')
 
             # Добавление нового пользователя в таблицу пользователей в Supabase
             supabase_user_data = {
@@ -104,11 +108,18 @@ def register(request):
                 'nickname': form.cleaned_data['nickname'],
             }
             response = supabase.table('user_table').insert(supabase_user_data).execute()
+            # if response.status_code != 201:
+            #     messages.error(request, f"Error creating user in Supabase: {response.text}")
+            #     return redirect('register')
+            response = supabase.table('user_table').select('*').eq('login', user.username).eq('password', form.cleaned_data['password1']).execute()
             if response.data:
                 # Если данные правильные, найдите или создайте пользователя в Django
-                user, created = User.objects.get_or_create(username=response.data[0]['id'])
+                django_user, created = DjangoUser.objects.get_or_create(username=response.data[0]['id'])
 
-            login(request, user)
+                if created:
+                    django_user.set_password(form.cleaned_data['password1'])
+                    django_user.save()
+                login(request, django_user)
             return redirect('post_list')
     else:
         form = RegistrationForm()
@@ -125,20 +136,14 @@ def user_login(request):
             response = supabase.table('user_table').select('*').eq('login', username).execute()
             if response.data:
                 user_data = response.data[0]
-                # Создаем экземпляр модели User для использования метода check_password
-                custom_user = CustomUser(login=user_data['login'], password=user_data['password'], nickname=user_data['nickname'])
-                if custom_user.check_password(password):
-                    # Если данные правильные, найдите или создайте пользователя в Django
-                    django_user, created = DjangoUser.objects.get_or_create(username=response.data[0]['id'])
+                # Если данные правильные, найдите или создайте пользователя в Django
+                django_user, created = DjangoUser.objects.get_or_create(username=response.data[0]['id'])
 
-                    if created:
-                        django_user.set_password(password)
-                        django_user.save()
-                    login(request, django_user)
-                    return redirect('post_list')
-                else:
-                    messages.error(request, 'Invalid login credentials.')
-                    return redirect('login')
+                if created:
+                    django_user.set_password(password)
+                    django_user.save()
+                login(request, django_user)
+                return redirect('post_list')
             else:
                 messages.error(request, 'Invalid login credentials.')
                 return redirect('login')
