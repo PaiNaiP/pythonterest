@@ -100,7 +100,7 @@ def register(request):
             supabase_user_data = {
                 'login': user.username,
                 'password': form.cleaned_data['password1'],
-                'nickname': user.username,
+                'nickname': form.cleaned_data['nickname'],
             }
             response = supabase.table('user_table').insert(supabase_user_data).execute()
             # if response.status_code != 201:
@@ -110,6 +110,7 @@ def register(request):
             if response.data:
                 # Если данные правильные, найдите или создайте пользователя в Django
                 user, created = User.objects.get_or_create(username=response.data[0]['id'])
+
             login(request, user)
             return redirect('post_list')
     else:
