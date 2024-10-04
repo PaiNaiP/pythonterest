@@ -16,11 +16,22 @@
 
 <body>
     <header>
-        <a href="{% url 'post_list' %}"><h3>LOGO</h3></a>
+        <a href="{% url 'post_list' %}">
+            <h3>LOGO</h3>
+        </a>
         <div class="login">
             <a href="{% url 'register' %}">Регистрация</a>
+<<<<<<< Updated upstream
             <a class="login1" href="{% url 'login' %}">Вход</a>
+=======
+           
+>>>>>>> Stashed changes
         </div>
+        {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}</p>
+        {% else %}
+        <p>Please <a href="{% url 'login' %}">login</a> to continue.</p>
+        {% endif %}
     </header>
 
     <article class="article">
@@ -34,8 +45,14 @@
             {% endfor %}
         </div>
 
+<<<<<<< Updated upstream
         <a href="{% url 'account' %}">Account</a> /
         <a href="{% url 'create_post' %}">create_post</a> 
+=======
+        <a href="{% url 'logout' %}">Logout</a> |
+        <a href="{% url 'account' %}">Account</a>
+        <a href="{% url 'create_post' %}">create_post</a>
+>>>>>>> Stashed changes
     </article>
 </body>
 

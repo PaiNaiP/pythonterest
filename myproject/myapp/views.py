@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Встроенные библиотеки Django
 from django.shortcuts import render, redirect  # Встроенная библиотека Django для рендеринга шаблонов и перенаправлений
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # Встроенные формы Django для создания пользователей и аутентификации
@@ -5,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate  # Встроенн�
 from django.contrib.auth.decorators import login_required  # Встроенный декоратор Django для проверки аутентификации пользователя
 from django.contrib import messages  # Встроенная библиотека Django для отображения сообщений пользователю
 from django.contrib.auth.models import User as DjangoUser  # Встроенная модель пользователя Django
+
 
 # Внешние библиотеки Django
 from .forms import PostForm, RegistrationForm, CustomLoginForm  # Пользовательские формы, определенные в приложении
@@ -37,6 +39,13 @@ def create_post(request):
     else:
         form = PostForm()  # Инициализация пустой формы
     return render(request, 'create_post.html', {'form': form})  # Рендеринг шаблона с формой
+
+def my_view(request):
+    if request.user.is_authenticated:
+        username = request.user.username
+    else:
+        username = 'Login'
+    return render(request, 'my_template.html', {'username': username})
 
 def post_list(request):
     # ООП: Вызов метода класса для получения всех постов
