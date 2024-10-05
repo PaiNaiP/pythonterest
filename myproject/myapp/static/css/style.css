@@ -1,14 +1,22 @@
-header {
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    padding: 10px;
-}
-
 h3 {
     display: block;
 }
+
+p{
+    margin-top: 10px;
+}
+
+#like-button {
+    font-size: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#like-button.liked {
+    color: red;
+}
+
 
 .login a:not(:last-child) {
     margin-right: 20px;
@@ -27,14 +35,44 @@ h3 {
     column-gap: 20px;
 }
 
+.post_blok_detail {
+    column-count: 2;
+    column-gap: 20px;
+    
+}
+
 .post_img {
     break-inside: avoid;
     margin-bottom: 20px;
-    
 }
 
 .post_img img {
     width: 100%;
     height: auto;
     border-radius: 10px;
+}
+
+.comment-button{
+    background:  #415a77;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+   width: 100%;
+}
+
+#comment-text{
+    border: #000 solid 1px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.comment{
+    margin-top: 10px;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.comments{
+    
 }

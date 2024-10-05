@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # Встроенные библиотеки Django
 from django.shortcuts import render, redirect  # Встроенная библиотека Django для рендеринга шаблонов и перенаправлений
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # Встроенные формы Django для создания пользователей и аутентификации

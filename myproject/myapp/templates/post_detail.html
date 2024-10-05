@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Detail</title>
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normolize.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
@@ -15,7 +16,9 @@
 
 <body>
     <header>
-        <a href="{% url 'post_list' %}"><h3>LOGO</h3></a>
+        <a href="{% url 'post_list' %}">
+            <h3>LOGO</h3>
+        </a>
         <div class="login">
             <a href="{% url 'register' %}">Register</a>
             <a class="login1" href="{% url 'login' %}">Login</a>
@@ -23,7 +26,7 @@
     </header>
 
     <article class="article">
-        <div class="post_blok">
+        <div class="post_blok_detail">
             <div class="post_img">
                 <img src="{{ post.image }}" alt="Post Image">
             </div>
@@ -31,30 +34,35 @@
                 <p>{{ post.text }}</p>
             </div>
             <div class="post_user">
-                <p>Uploaded by: {{ user.nickname }}</p>
+                <p>Автор: {{ user.nickname }}</p>
             </div>
             <div class="post_likes">
                 <button id="like-button" data-post-id="{{ post.id }}">
-                    {% if user_liked %}Unlike{% else %}Like{% endif %}
+                    {% if user_liked %}♥{% else %}♡{% endif %}
                 </button>
                 <span id="like-count">{{ like_count }}</span>
             </div>
-        </div>
 
-        <div class="comments">
-            <h3>Comments</h3>
-            <ul id="comments-list">
-                {% for comment in comments %}
-                    <li>
-                        <strong>{{ comment.user.nickname }}:</strong> {{ comment.text }}
-                    </li>
-                {% endfor %}
-            </ul>
-            <form id="comment-form">
+
+            <div class="comments">
+                <h3>Comments</h3>
+                <form id="comment-form"></form>
                 {% csrf_token %}
-                <textarea id="comment-text" name="text" placeholder="Add a comment..." required></textarea>
-                <button type="submit">Add Comment</button>
-            </form>
+                <textarea id="comment-text" name="text" placeholder="Напишите комментарий..." required></textarea>
+                <button class="comment-button" type="submit">Добавить комментарий</button>
+                </form>
+                <ul id="comments-list">
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <li>
+                            <strong>{{ comment.user.nickname }}:</strong> {{ comment.text }}
+                        </li>
+                    </div>
+
+                    {% endfor %}
+                </ul>
+
+            </div>
         </div>
 
         <a href="{% url 'logout' %}">Logout</a> |
@@ -62,7 +70,7 @@
     </article>
 
     <script>
-        document.getElementById('like-button').addEventListener('click', function() {
+        document.getElementById('like-button').addEventListener('click', function () {
             const postId = this.dataset.postId;
             fetch(`/post/${postId}/toggle_like/`, {
                 method: 'POST',
@@ -71,18 +79,21 @@
                     'X-CSRFToken': '{{ csrf_token }}'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.liked) {
-                    this.textContent = 'Unlike';
-                } else {
-                    this.textContent = 'Like';
-                }
-                document.getElementById('like-count').textContent = data.like_count;
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.liked) {
+                        this.textContent = '♥'; // Измените текст на символ сердца
+                        this.classList.add('liked');
+                    } else {
+                        this.textContent = '♡'; // Измените текст на пустое сердце
+                        this.classList.remove('liked');
+                    }
+                    document.getElementById('like-count').textContent = data.like_count;
+                });
         });
 
-        document.getElementById('comment-form').addEventListener('submit', function(event) {
+
+        document.getElementById('comment-form').addEventListener('submit', function (event) {
             event.preventDefault();
             const postId = '{{ post.id }}';
             const text = document.getElementById('comment-text').value;
@@ -96,17 +107,17 @@
                     text: text
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                const commentsList = document.getElementById('comments-list');
-                commentsList.innerHTML = '';
-                data.comments.forEach(comment => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${comment.user.nickname}:</strong> ${comment.text}`;
-                    commentsList.appendChild(li);
+                .then(response => response.json())
+                .then(data => {
+                    const commentsList = document.getElementById('comments-list');
+                    commentsList.innerHTML = '';
+                    data.comments.forEach(comment => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${comment.user.nickname}:</strong> ${comment.text}`;
+                        commentsList.appendChild(li);
+                    });
+                    document.getElementById('comment-text').value = '';
                 });
-                document.getElementById('comment-text').value = '';
-            });
         });
     </script>
 </body>
