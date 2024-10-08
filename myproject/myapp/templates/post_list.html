@@ -20,18 +20,20 @@
             <h3>LOGO</h3>
         </a>
         <div class="login">
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Выход</a>
+            <a href="{% url 'account' %}">
+                <div class="avatar">
+                    {{ user.nickname|first }}
+                </div>
+            </a>
+            {% else %}
             <a href="{% url 'register' %}">Регистрация</a>
-
             <a class="login1" href="{% url 'login' %}">Вход</a>
-
-
+            {% endif %}
         </div>
-        {% if user.is_authenticated %}
-      
-        {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> to continue.</p>
-        {% endif %}
     </header>
+
 
     <article class="article">
         <div class="post_blok">
@@ -45,8 +47,13 @@
         </div>
 
 
-        <a href="{% url 'account' %}">Account</a> /
-        <a href="{% url 'create_post' %}">create_post</a> 
+        <script>
+            window.onload = function () {
+                var avatar = document.querySelector('.avatar');
+                var randomColor = '#' + Math.floor(Math.random() * 8388607).toString(16);
+                avatar.style.backgroundColor = randomColor;
+            }
+        </script>
 
     </article>
 </body>

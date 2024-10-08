@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, authenticate  # Встроенн�
 from django.contrib.auth.decorators import login_required  # Встроенный декоратор Django для проверки аутентификации пользователя
 from django.contrib import messages  # Встроенная библиотека Django для отображения сообщений пользователю
 from django.contrib.auth.models import User as DjangoUser  # Встроенная модель пользователя Django
-
+import random # подключение рандома 
 
 # Внешние библиотеки Django
 from .forms import PostForm, RegistrationForm, CustomLoginForm  # Пользовательские формы, определенные в приложении
@@ -46,6 +46,9 @@ def my_view(request):
         username = 'Login'
     return render(request, 'my_template.html', {'username': username})
 
+def generate_random_color():
+    return '#{:06x}'.format(random.randint(0, 0xFFFFFF))
+
 def post_list(request):
     # ООП: Вызов метода класса для получения всех постов
     posts = Post.get_all_posts()
@@ -69,6 +72,8 @@ def post_detail(request, pk):
     }
     return render(request, 'post_detail.html', context)  # Рендеринг шаблона с деталями поста
 
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)  # Инициализация формы с данными из POST-запроса
@@ -78,6 +83,7 @@ def register(request):
             # Проверка существования пользователя в Supabase
             existing_user = User.get_user_by_login(user.username)
             if existing_user:
+                
                 messages.error(request, 'User with this username already exists in Supabase.')  # Отображение сообщения об ошибке
                 return redirect('register')  # Перенаправление на страницу регистрации
 
@@ -105,6 +111,8 @@ def user_login(request):
             # Проверка данных пользователя в Supabase
             user_data = User.get_user_by_login(username)
             if user_data:
+               
+                
                 # Если данные правильные, найдите или создайте пользователя в Django
                 django_user, created = DjangoUser.objects.get_or_create(username=user_data['id'])
 

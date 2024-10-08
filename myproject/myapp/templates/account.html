@@ -31,6 +31,7 @@
         {% else %}
         <p>Данные пользователя не найдены.</p>
         {% endif %}
+        <a class="create_post" href="{% url 'create_post' %}">Создать пост</a>
 
         <script>
             window.onload = function() {
