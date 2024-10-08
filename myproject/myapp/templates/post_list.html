@@ -24,7 +24,7 @@
             <a href="{% url 'logout' %}">Выход</a>
             <a href="{% url 'account' %}">
                 <div class="avatar">
-                    {{ user.nickname|first }}
+                    {{ user.username|first }}
                 </div>
             </a>
             {% else %}
