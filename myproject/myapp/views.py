@@ -51,8 +51,13 @@ def generate_random_color():
 
 def post_list(request):
     # ООП: Вызов метода класса для получения всех постов
+    username = ''
+    if request.user.is_authenticated:
+        user_data = User.get_user_by_id(request.user)
+        username = user_data.get('nickname', '')
     posts = Post.get_all_posts()
-    return render(request, 'post_list.html', {'posts': posts})  # Рендеринг шаблона со списком постов
+    return render(request, 'post_list.html', {'posts': posts, 'username': username})  # Рендеринг шаблона со списком постов
+
 
 def post_detail(request, pk):
     # ООП: Вызов метода класса для получения поста по ID

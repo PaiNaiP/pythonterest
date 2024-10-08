@@ -24,7 +24,7 @@
             <a href="{% url 'logout' %}">Выход</a>
             <a href="{% url 'account' %}">
                 <div class="avatar">
-                    {{ user.username|first }}
+                    {{ username|first }}
                 </div>
             </a>
             {% else %}
@@ -33,7 +33,6 @@
             {% endif %}
         </div>
     </header>
-
 
     <article class="article">
         <div class="post_blok">
@@ -45,7 +44,6 @@
             </div>
             {% endfor %}
         </div>
-
 
         <script>
             window.onload = function () {
