@@ -102,7 +102,7 @@ def register(request):
                 django_user.set_password(form.cleaned_data['password1'])  # Установка пароля для нового пользователя
                 django_user.save()  # Сохранение пользователя
             login(request, django_user)  # Вход пользователя
-            return redirect('post_list')  # Перенаправление на страницу со списком постов
+            return redirect('login')  # Перенаправление на страницу со списком постов
     else:
         form = RegistrationForm()  # Инициализация пустой формы
     return render(request, 'register.html', {'form': form})  # Рендеринг шаблона с формой регистрации
