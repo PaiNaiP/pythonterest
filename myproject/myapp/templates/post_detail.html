@@ -19,10 +19,19 @@
         <a href="{% url 'post_list' %}">
             <h3>LOGO</h3>
         </a>
+        <!-- {% if user_data %}
+        <a class="login1" href="{% url 'logout' %}">Выход</a>
+        <a href="">
+            <div class="avatar"></div>
+                {{ user_data.nickname|first }}
+            </div>
+        </a>
+        {% else %}
         <div class="login">
-            <a href="{% url 'register' %}">Register</a>
-            <a class="login1" href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+            <a class="login1" href="{% url 'login' %}">Вход</a>
         </div>
+        {% endif %} -->
     </header>
 
     <article class="article">
@@ -65,8 +74,7 @@
             </div>
         </div>
 
-        <a href="{% url 'logout' %}">Logout</a> |
-        <a href="{% url 'account' %}">Account</a>
+
     </article>
 
     <script>
