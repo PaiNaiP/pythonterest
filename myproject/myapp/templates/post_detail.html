@@ -48,7 +48,7 @@
             <div class="post_likes">
                 <form method="POST" action="{% url 'toggle_like' post.id %}">
                     {% csrf_token %}
-                    <button type="submit">
+                    <button type="submit" id="like-button" class="{% if user_liked %}liked{% endif %}">
                         {% if user_liked %}♥{% else %}♡{% endif %}
                     </button>
                 </form>
@@ -59,8 +59,8 @@
                 <h3>Comments</h3>
                 <form method="POST" action="{% url 'add_comment' post.id %}">
                     {% csrf_token %}
-                    <textarea name="text" placeholder="Напишите комментарий..." required></textarea>
-                    <button type="submit">Добавить комментарий</button>
+                    <textarea id="comment-text" name="text" placeholder="Напишите комментарий..." required></textarea>
+                    <button type="submit" class="comment-button">Добавить комментарий</button>
                 </form>
                 <ul id="comments-list">
                     {% for comment in comments %}
