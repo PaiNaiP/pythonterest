@@ -59,6 +59,7 @@
                 {% csrf_token %}
                 <textarea id="comment-text" name="text" placeholder="Напишите комментарий..." required></textarea>
                 <button class="comment-button" type="submit">Добавить комментарий</button>
+    
                 </form>
                 <ul id="comments-list">
                     {% for comment in comments %}
