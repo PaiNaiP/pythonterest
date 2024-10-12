@@ -64,19 +64,24 @@ def post_detail(request, pk):
     post = Post.get_post_by_id(pk)
     user = User.get_user_by_id(post['user_id']) if post else None  # Получение пользователя, создавшего пост
     like_count = Like.get_like_count(pk)  # Получение количества лайков для поста
-    user_id = str(request.user)  # Получение ID текущего пользователя
-    user_liked = Like.is_liked_by_user(user_id, pk)  # Проверка, лайкнул ли текущий пользователь пост
+    user_id = str(request.user) if request.user.is_authenticated else None  # Получение ID текущего пользователя
+    print(f"User ID: {user_id}")
+    user_liked = Like.is_liked_by_user(user_id, pk) if user_id else False  # Проверка, лайкнул ли текущий пользователь пост
+    username = ''
+    if request.user.is_authenticated:
+        user_data = User.get_user_by_id(request.user)
+        username = user_data.get('nickname', '')
     comments = Comment.get_comments_by_post(pk)  # Получение комментариев для поста
 
     context = {
         'post': post,
+        'username': username,
         'user': user,
         'like_count': like_count,
         'user_liked': user_liked,
         'comments': comments,
     }
     return render(request, 'post_detail.html', context)  # Рендеринг шаблона с деталями поста
-
 
 
 def register(request):
