@@ -46,19 +46,21 @@
                 <p>Автор: {{ user.nickname }}</p>
             </div>
             <div class="post_likes">
-                <button id="like-button" data-post-id="{{ post.id }}">
-                    {% if user_liked %}♥{% else %}♡{% endif %}
-                </button>
+                <form method="POST" action="{% url 'toggle_like' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if user_liked %}♥{% else %}♡{% endif %}
+                    </button>
+                </form>
                 <span id="like-count">{{ like_count }}</span>
             </div>
 
-
             <div class="comments">
                 <h3>Comments</h3>
-                <form id="comment-form"></form>
-                {% csrf_token %}
-                <textarea id="comment-text" name="text" placeholder="Напишите комментарий..." required></textarea>
-                <button class="comment-button" type="submit">Добавить комментарий</button>
+                <form method="POST" action="{% url 'add_comment' post.id %}">
+                    {% csrf_token %}
+                    <textarea name="text" placeholder="Напишите комментарий..." required></textarea>
+                    <button type="submit">Добавить комментарий</button>
                 </form>
                 <ul id="comments-list">
                     {% for comment in comments %}
@@ -67,67 +69,11 @@
                             <strong>{{ comment.user.nickname }}:</strong> {{ comment.text }}
                         </li>
                     </div>
-
                     {% endfor %}
                 </ul>
-
             </div>
         </div>
-
-
     </article>
-
-    <script>
-        document.getElementById('like-button').addEventListener('click', function () {
-            const postId = this.dataset.postId;
-            fetch(`/post/${postId}/toggle_like/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.liked) {
-                        this.textContent = '♥'; // Измените текст на символ сердца
-                        this.classList.add('liked');
-                    } else {
-                        this.textContent = '♡'; // Измените текст на пустое сердце
-                        this.classList.remove('liked');
-                    }
-                    document.getElementById('like-count').textContent = data.like_count;
-                });
-        });
-
-
-        document.getElementById('comment-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const postId = '{{ post.id }}';
-            const text = document.getElementById('comment-text').value;
-            fetch(`/post/${postId}/add_comment/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: new URLSearchParams({
-                    text: text
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const commentsList = document.getElementById('comments-list');
-                    commentsList.innerHTML = '';
-                    data.comments.forEach(comment => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<strong>${comment.user.nickname}:</strong> ${comment.text}`;
-                        commentsList.appendChild(li);
-                    });
-                    document.getElementById('comment-text').value = '';
-                });
-        });
-    </script>
 </body>
 
 </html>

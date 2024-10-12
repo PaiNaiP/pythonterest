@@ -158,20 +158,19 @@ def toggle_like(request, pk):
         user_id = str(request.user)  # Получение ID текущего пользователя
         post_id = str(pk)  # Получение ID поста
         # ООП: Вызов метода класса для переключения лайка
-        liked = Like.toggle_like(user_id, post_id)
-        like_count = Like.get_like_count(post_id)  # Получение количества лайков для поста
-        return JsonResponse({'liked': liked, 'like_count': like_count})  # Возврат JSON-ответа
-    return JsonResponse({'error': 'Invalid request method'}, status=400)  # Возврат ошибки для неправильного метода запроса
-
+        Like.toggle_like(user_id, post_id)
+        return redirect('post_detail', pk=post_id)  # Перенаправление на страницу с деталями поста
+    return redirect('post_detail', pk=pk)
 # ООП: Использование декоратора для проверки аутентификации пользователя
 @login_required
 def add_comment(request, pk):
+    print('request')
     if request.method == 'POST':
         text = request.POST.get('text')  # Получение текста комментария из POST-запроса
+        print(text)
         user_id = str(request.user)  # Получение ID текущего пользователя
         post_id = str(pk)  # Получение ID поста
         # ООП: Вызов метода класса для добавления комментария
         Comment.add_comment(text, user_id, post_id)
-        comments = Comment.get_comments_by_post(post_id)  # Получение комментариев для поста
-        return JsonResponse({'comments': comments})  # Возврат JSON-ответа
+        return redirect('post_detail', pk=post_id)  # Возврат JSON-ответа
     return JsonResponse({'error': 'Invalid request method'}, status=400)  # Возврат ошибки для неправильного метода запроса
