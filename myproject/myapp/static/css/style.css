@@ -68,12 +68,14 @@ p {
     padding: 10px 20px;
     border-radius: 10px;
     width: 200%;
+   
 }
 
 #comment-text {
     border: #000 solid 1px;
     border-radius: 10px;
     width: 200%;
+    
 }
 
 .comment {
@@ -82,4 +84,22 @@ p {
     padding: 10px;
     border-radius: 10px;
     width: 200%;
+    
 }
+
+.post_user{
+    margin-left: 250px;
+}
+
+.post_text{
+    margin-left: 250px;
+}
+
+.post_likes{
+    margin-left: 250px;
+}
+
+.comments{
+    margin-left: 250px; 
+}
+
