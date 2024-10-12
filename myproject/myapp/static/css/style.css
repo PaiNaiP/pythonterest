@@ -46,9 +46,9 @@ p {
 }
 
 .post_blok_detail {
-    column-count: 3;
+    column-count: 2;
     column-gap: 30px;
-
+    
 }
 
 .post_img {
@@ -58,7 +58,11 @@ p {
 
 .post_img img {
     width: 100%;
-    height: auto;
+    border-radius: 10px;
+}
+
+.post_imgg img {
+    width: 70%;
     border-radius: 10px;
 }
 
@@ -67,14 +71,14 @@ p {
     color: #fff;
     padding: 10px 20px;
     border-radius: 10px;
-    width: 200%;
+    width: 70%;
    
 }
 
 #comment-text {
     border: #000 solid 1px;
     border-radius: 10px;
-    width: 200%;
+    width: 70%;
     
 }
 
@@ -83,23 +87,9 @@ p {
     background: #f1f1f1;
     padding: 10px;
     border-radius: 10px;
-    width: 200%;
+    width: 70%;
     
 }
 
-.post_user{
-    margin-left: 250px;
-}
 
-.post_text{
-    margin-left: 250px;
-}
-
-.post_likes{
-    margin-left: 250px;
-}
-
-.comments{
-    margin-left: 250px; 
-}
 

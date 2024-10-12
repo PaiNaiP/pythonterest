@@ -72,7 +72,7 @@ def post_detail(request, pk):
         user_data = User.get_user_by_id(request.user)
         username = user_data.get('nickname', '')
     comments = Comment.get_comments_by_post(pk)  # Получение комментариев для поста
-
+    
     context = {
         'post': post,
         'username': username,
