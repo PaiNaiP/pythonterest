@@ -34,7 +34,7 @@
                 <p>Автор: {{ user.nickname }}</p>
             </div>
             <div class="post_likes">
-                <form method="POST" action="{% url 'toggle_like' post.id %}">
+                <form method="POST" action="{% url 'toggle_like' post.id %}" >
                     {% csrf_token %}
                     <button id="like-button" type="submit">
                         {% if user_liked %}♥{% else %}♡{% endif %}
